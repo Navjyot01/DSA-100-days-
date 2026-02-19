@@ -1,0 +1,42 @@
+int maxSubarraySumCircular(int* nums, int numsSize) {
+    int total_sum = 0;
+    
+    int max_current = nums[0];
+    int max_global = nums[0];
+    
+    int min_current = nums[0];
+    int min_global = nums[0];
+    
+    for(int i = 0; i < numsSize; i++) {
+        total_sum += nums[i];
+        
+        if(i > 0) {
+            // Kadane for maximum subarray
+            if(max_current + nums[i] > nums[i])
+                max_current = max_current + nums[i];
+            else
+                max_current = nums[i];
+                
+            if(max_current > max_global)
+                max_global = max_current;
+            
+            // Kadane for minimum subarray
+            if(min_current + nums[i] < nums[i])
+                min_current = min_current + nums[i];
+            else
+                min_current = nums[i];
+                
+            if(min_current < min_global)
+                min_global = min_current;
+        }
+    }
+    
+    // If all numbers are negative
+    if(max_global < 0)
+        return max_global;
+    
+    // Return maximum of normal and circular case
+    int circular_max = total_sum - min_global;
+    
+    return (max_global > circular_max) ? max_global : circular_max;
+}
