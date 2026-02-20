@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100000
+
+// Simple hash structure using arrays
+typedef struct Node {
+    long long sum;
+    int count;
+    struct Node* next;
+} Node;
+
+#define HASH_SIZE 100003
+
+Node* hashTable[HASH_SIZE];
+
+// Hash function
+int hash(long long sum) {
+    return (sum % HASH_SIZE + HASH_SIZE) % HASH_SIZE;
+}
+
+// Insert or update frequency
+int insert(long long sum) {
+    int index = hash(sum);
+    Node* temp = hashTable[index];
+    
+    while (temp != NULL) {
+        if (temp->sum == sum) {
+            temp->count++;
+            return temp->count - 1;  // previous count
+        }
+        temp = temp->next;
+    }
+    
+    // If not found, create new node
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->sum = sum;
+    newNode->count = 1;
+    newNode->next = hashTable[index];
+    hashTable[index] = newNode;
+    
+    return 0;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    
+    long long arr[n];
+    for(int i = 0; i < n; i++)
+        scanf("%lld", &arr[i]);
+    
+    long long prefix_sum = 0;
+    long long count = 0;
+    
+    // Important: prefix sum 0 appears once initially
+    insert(0);
+    
+    for(int i = 0; i < n; i++) {
+        prefix_sum += arr[i];
+        count += insert(prefix_sum);
+    }
+    
+    printf("%lld\n", count);
+    
+    return 0;
+}
