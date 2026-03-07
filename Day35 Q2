@@ -1,0 +1,48 @@
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+typedef struct {
+    int s1[MAX];
+    int s2[MAX];
+    int top1;
+    int top2;
+} MyQueue;
+
+MyQueue* myQueueCreate() {
+    MyQueue* obj = (MyQueue*)malloc(sizeof(MyQueue));
+    obj->top1 = -1;
+    obj->top2 = -1;
+    return obj;
+}
+
+void push(MyQueue* obj, int x) {
+    obj->s1[++obj->top1] = x;
+}
+
+int transfer(MyQueue* obj) {
+    if (obj->top2 == -1) {
+        while (obj->top1 != -1) {
+            obj->s2[++obj->top2] = obj->s1[obj->top1--];
+        }
+    }
+    return obj->s2[obj->top2];
+}
+
+int pop(MyQueue* obj) {
+    transfer(obj);
+    return obj->s2[obj->top2--];
+}
+
+int peek(MyQueue* obj) {
+    return transfer(obj);
+}
+
+bool empty(MyQueue* obj) {
+    return (obj->top1 == -1 && obj->top2 == -1);
+}
+
+void myQueueFree(MyQueue* obj) {
+    free(obj);
+}
