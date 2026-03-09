@@ -1,0 +1,44 @@
+# Priority Queue using array
+class PriorityQueue:
+    def __init__(self):
+        self.queue = []
+
+    # Insert element
+    def insert(self, x):
+        self.queue.append(x)
+
+    # Delete element with highest priority (smallest value)
+    def delete(self):
+        if not self.queue:
+            print(-1)
+            return
+        # Find index of smallest element
+        min_index = 0
+        for i in range(1, len(self.queue)):
+            if self.queue[i] < self.queue[min_index]:
+                min_index = i
+        # Remove and print the smallest element
+        print(self.queue.pop(min_index))
+
+    # Peek element with highest priority (smallest value)
+    def peek(self):
+        if not self.queue:
+            print(-1)
+            return
+        # Find smallest element
+        min_val = min(self.queue)
+        print(min_val)
+
+
+# Read input
+N = int(input())
+pq = PriorityQueue()
+
+for _ in range(N):
+    command = input().split()
+    if command[0] == "insert":
+        pq.insert(int(command[1]))
+    elif command[0] == "delete":
+        pq.delete()
+    elif command[0] == "peek":
+        pq.peek()
