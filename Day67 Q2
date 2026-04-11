@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+int* findOrder(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize, int* returnSize) {
+    
+    // Step 1: Allocate memory
+    int** graph = (int**)malloc(numCourses * sizeof(int*));
+    int* inDegree = (int*)calloc(numCourses, sizeof(int));
+    int* count = (int*)calloc(numCourses, sizeof(int));
+
+    for (int i = 0; i < numCourses; i++) {
+        graph[i] = (int*)malloc(numCourses * sizeof(int));
+    }
+
+    // Step 2: Build graph
+    for (int i = 0; i < prerequisitesSize; i++) {
+        int a = prerequisites[i][0];
+        int b = prerequisites[i][1];
+
+        graph[b][count[b]++] = a; // b → a
+        inDegree[a]++;
+    }
+
+    // Step 3: Queue
+    int* queue = (int*)malloc(numCourses * sizeof(int));
+    int front = 0, rear = 0;
+
+    for (int i = 0; i < numCourses; i++) {
+        if (inDegree[i] == 0) {
+            queue[rear++] = i;
+        }
+    }
+
+    // Step 4: Result array
+    int* result = (int*)malloc(numCourses * sizeof(int));
+    int index = 0;
+
+    // Step 5: BFS
+    while (front < rear) {
+        int node = queue[front++];
+        result[index++] = node;
+
+        for (int i = 0; i < count[node]; i++) {
+            int neighbor = graph[node][i];
+            inDegree[neighbor]--;
+
+            if (inDegree[neighbor] == 0) {
+                queue[rear++] = neighbor;
+            }
+        }
+    }
+
+    // Step 6: Check
+    if (index == numCourses) {
+        *returnSize = numCourses;
+        return result;
+    } else {
+        *returnSize = 0;
+        return (int*)malloc(0); // empty array
+    }
+}
