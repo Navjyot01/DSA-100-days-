@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+int floorSqrt(int n) {
+    int left = 0;
+    int right = n;
+    int ans = 0;
+
+    while (left <= right) {
+        long long mid = left + (right - left) / 2;
+        long long sq = mid * mid;
+
+        if (sq == n) {
+            return (int)mid;
+        }
+        else if (sq < n) {
+            ans = mid;      // store best valid answer
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+
+    return ans;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+
+    printf("%d\n", floorSqrt(n));
+
+    return 0;
+}
