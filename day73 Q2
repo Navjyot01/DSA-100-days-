@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int find(int parent[], int x) {
+    if (parent[x] != x)
+        parent[x] = find(parent, parent[x]);  // path compression
+    return parent[x];
+}
+
+void unionSet(int parent[], int a, int b) {
+    int rootA = find(parent, a);
+    int rootB = find(parent, b);
+    if (rootA != rootB) {
+        parent[rootB] = rootA;
+    }
+}
+
+int* findRedundantConnection(int** edges, int edgesSize, int* edgesColSize, int* returnSize) {
+    static int result[2];
+    int parent[1001];
+
+    // Initialize parent
+    for (int i = 1; i <= edgesSize; i++) {
+        parent[i] = i;
+    }
+
+    for (int i = 0; i < edgesSize; i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+
+        if (find(parent, u) == find(parent, v)) {
+            result[0] = u;
+            result[1] = v;
+        } else {
+            unionSet(parent, u, v);
+        }
+    }
+
+    *returnSize = 2;
+    return result;
+}
